@@ -1,44 +1,1521 @@
-```python
-from flask import Flask, render_template
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-app = Flask(__name__)
+    <title>Zoo Logic AI Agents</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                Z
+            </div>
+
+            <div>
+                <div class="brand-name">Zoo Logic</div>
+                <div class="brand-subtitle">AI Agents</div>
+            </div>
+
+        </div>
+
+        <nav class="navigation">
+
+            <a href="/" class="nav-item {% if not section %}active{% endif %}">
+                <span class="nav-icon">🏠</span>
+                <span>Inicio</span>
+            </a>
+
+            <a href="/agentes"
+               class="nav-item {% if section == 'agentes' or section == 'agente_config' %}active{% endif %}">
+                <span class="nav-icon">🤖</span>
+                <span>Agentes</span>
+            </a>
+
+            <a href="/knowledge"
+               class="nav-item {% if section == 'knowledge' %}active{% endif %}">
+                <span class="nav-icon">📚</span>
+                <span>Knowledge Base</span>
+            </a>
+
+            <a href="/conexiones"
+               class="nav-item {% if section == 'conexiones' %}active{% endif %}">
+                <span class="nav-icon">🔗</span>
+                <span>Conexiones</span>
+            </a>
+
+            <a href="/metricas"
+               class="nav-item {% if section == 'metricas' %}active{% endif %}">
+                <span class="nav-icon">📊</span>
+                <span>Métricas</span>
+            </a>
+
+            <a href="/playground"
+               class="nav-item {% if section == 'playground' %}active{% endif %}">
+                <span class="nav-icon">🧪</span>
+                <span>Playground</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+                Sistema operativo
+            </div>
+
+            <div class="version">
+                Zoo Logic AI Agents v0.1
+            </div>
+
+        </div>
+
+    </aside>
 
 
-@app.route("/")
-def home():
-    return render_template("index.html", section=None)
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <div class="breadcrumb">
+                    Zoo Logic / AI Agents
+                </div>
+
+                <h1>
+
+                    {% if section == "agentes" %}
+                        Agentes
+
+                    {% elif section == "agente_config" %}
+                        Configurar agente
+
+                    {% elif section == "knowledge" %}
+                        Knowledge Base
+
+                    {% elif section == "conexiones" %}
+                        Conexiones
+
+                    {% elif section == "metricas" %}
+                        Métricas
+
+                    {% elif section == "playground" %}
+                        Playground
+
+                    {% else %}
+                        Inicio
+
+                    {% endif %}
+
+                </h1>
+
+            </div>
 
 
-@app.route("/agentes")
-def agentes():
-    return render_template("index.html", section="agentes")
+            <div class="topbar-actions">
+
+                <button class="icon-button" title="Notificaciones">
+                    🔔
+                </button>
+
+                <div class="user-profile">
+
+                    <div class="user-avatar">
+                        C
+                    </div>
+
+                    <div class="user-info">
+                        <strong>Administrador</strong>
+                        <span>AI Platform</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
 
 
-@app.route("/agentes/configurar")
-def agentes_configurar():
-    return render_template("index.html", section="agente_config")
+        <!-- ================= CONTENT ================= -->
+
+        <section class="content">
 
 
-@app.route("/knowledge")
-def knowledge():
-    return render_template("index.html", section="knowledge")
+            {% if not section %}
+
+            <!-- ================= INICIO ================= -->
+
+            <div class="welcome">
+
+                <div>
+
+                    <span class="eyebrow">
+                        PLATAFORMA DE INTELIGENCIA ARTIFICIAL
+                    </span>
+
+                    <h2>
+                        Bienvenida a<br>
+                        <strong>Zoo Logic AI Agents</strong>
+                    </h2>
+
+                    <p>
+                        Creá, configurá, probá y monitoreá agentes de
+                        inteligencia artificial para automatizar procesos
+                        y brindar asistencia especializada.
+                    </p>
+
+                    <button class="primary-button"
+                            onclick="location.href='/agentes'">
+                        Ver agentes →
+                    </button>
+
+                </div>
+
+                <div class="welcome-graphic">
+
+                    <div class="ai-circle">
+                        🤖
+                    </div>
+
+                </div>
+
+            </div>
 
 
-@app.route("/conexiones")
-def conexiones():
-    return render_template("index.html", section="conexiones")
+            <!-- KPIs -->
+
+            <div class="section-title">
+
+                <h3>Resumen</h3>
+
+            </div>
 
 
-@app.route("/metricas")
-def metricas():
-    return render_template("index.html", section="metricas")
+            <div class="kpi-grid">
+
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        🤖
+                    </div>
+
+                    <div>
+                        <span>Agentes</span>
+                        <strong>1</strong>
+                    </div>
+
+                </div>
 
 
-@app.route("/playground")
-def playground():
-    return render_template("index.html", section="playground")
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        📚
+                    </div>
+
+                    <div>
+                        <span>Fuentes de conocimiento</span>
+                        <strong>3</strong>
+                    </div>
+
+                </div>
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        💬
+                    </div>
+
+                    <div>
+                        <span>Consultas</span>
+                        <strong>1.284</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        ⚡
+                    </div>
+
+                    <div>
+                        <span>Resueltas por IA</span>
+                        <strong>78%</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AGENTE ACTIVO -->
+
+            <div class="section-title">
+
+                <h3>
+                    Agentes activos
+                </h3>
+
+                <button class="secondary-button"
+                        onclick="location.href='/agentes'">
+                    Ver todos
+                </button>
+
+            </div>
+
+
+            <div class="agent-card">
+
+                <div class="agent-main">
+
+                    <div class="agent-avatar">
+                        🤖
+                    </div>
+
+                    <div>
+
+                        <div class="agent-title">
+                            Agente Técnico L1
+                        </div>
+
+                        <div class="agent-description">
+                            Asistencia técnica de primer nivel
+                            para Dragonfish.
+                        </div>
+
+                        <div class="agent-tags">
+
+                            <span class="tag blue">
+                                Dragonfish
+                            </span>
+
+                            <span class="tag green">
+                                Activo
+                            </span>
+
+                            <span class="tag">
+                                L1
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="agent-stats">
+
+                    <div>
+                        <span>Consultas</span>
+                        <strong>1.284</strong>
+                    </div>
+
+                    <div>
+                        <span>Resolución</span>
+                        <strong>78%</strong>
+                    </div>
+
+                    <div>
+                        <span>Derivaciones</span>
+                        <strong>22%</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% elif section == "agentes" %}
+
+            <!-- ================= AGENTES ================= -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ADMINISTRACIÓN DE AGENTES
+                    </span>
+
+                    <h2>
+                        Agentes de inteligencia artificial
+                    </h2>
+
+                    <p>
+                        Creá, configurá, probá y monitoreá los agentes
+                        utilizados por Zoo Logic.
+                    </p>
+
+                </div>
+
+                <button class="primary-button">
+                    + Crear agente
+                </button>
+
+            </div>
+
+
+            <!-- ================= AGENTE DRAGONFISH ================= -->
+
+            <div class="agent-list">
+
+                <div class="agent-card">
+
+                    <div class="agent-main">
+
+                        <div class="agent-avatar">
+                            🤖
+                        </div>
+
+                        <div>
+
+                            <div class="agent-title">
+                                Agente Técnico L1 — Dragonfish
+                            </div>
+
+                            <div class="agent-description">
+                                Asistente técnico especializado en diagnóstico
+                                y resolución de incidentes de primer nivel
+                                para Dragonfish.
+                            </div>
+
+
+                            <div class="agent-tags">
+
+                                <span class="tag blue">
+                                    Dragonfish
+                                </span>
+
+                                <span class="tag green">
+                                    ● Activo
+                                </span>
+
+                                <span class="tag">
+                                    L1
+                                </span>
+
+                                <span class="tag">
+                                    WhatsApp
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INFORMACIÓN -->
+
+                    <div class="agent-info-grid">
+
+                        <div class="agent-info-item">
+                            <span>Modelo</span>
+                            <strong>OpenAI</strong>
+                        </div>
+
+                        <div class="agent-info-item">
+                            <span>Knowledge Base</span>
+                            <strong>Dragonfish</strong>
+                        </div>
+
+                        <div class="agent-info-item">
+                            <span>Nivel</span>
+                            <strong>Soporte L1</strong>
+                        </div>
+
+                        <div class="agent-info-item">
+                            <span>Canal</span>
+                            <strong>WhatsApp</strong>
+                        </div>
+
+                    </div>
+
+
+                    <!-- MÉTRICAS -->
+
+                    <div class="agent-stats">
+
+                        <div>
+                            <span>Consultas</span>
+                            <strong>1.284</strong>
+                        </div>
+
+                        <div>
+                            <span>Resolución</span>
+                            <strong>78%</strong>
+                        </div>
+
+                        <div>
+                            <span>Derivaciones</span>
+                            <strong>22%</strong>
+                        </div>
+
+                        <div>
+                            <span>Estado</span>
+                            <strong class="text-success">
+                                Activo
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <!-- ACCIONES -->
+
+                    <div class="agent-actions">
+
+                        <button
+                            class="secondary-button"
+                            onclick="location.href='/agentes/configurar'">
+                            ⚙ Configurar
+                        </button>
+
+
+                        <button
+                            class="secondary-button"
+                            onclick="location.href='/playground'">
+                            🧪 Playground
+                        </button>
+
+
+                        <button
+                            class="secondary-button">
+                            ⏸ Pausar
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRÓXIMOS AGENTES -->
+
+            <div class="section-title">
+
+                <div>
+
+                    <h3>
+                        Próximamente
+                    </h3>
+
+                    <p>
+                        Agentes que podrán incorporarse a la plataforma.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="agent-list">
+
+                <div class="agent-card agent-card-disabled">
+
+                    <div class="agent-main">
+
+                        <div class="agent-avatar">
+                            🛒
+                        </div>
+
+                        <div>
+
+                            <div class="agent-title">
+                                Agente Técnico Ecommerce
+                            </div>
+
+                            <div class="agent-description">
+                                Asistencia especializada para integraciones
+                                y problemas de ecommerce.
+                            </div>
+
+                            <div class="agent-tags">
+
+                                <span class="tag">
+                                    Ecommerce
+                                </span>
+
+                                <span class="tag">
+                                    Próximamente
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="agent-card agent-card-disabled">
+
+                    <div class="agent-main">
+
+                        <div class="agent-avatar">
+                            🧾
+                        </div>
+
+                        <div>
+
+                            <div class="agent-title">
+                                Agente Facturación Electrónica
+                            </div>
+
+                            <div class="agent-description">
+                                Asistencia especializada en facturación
+                                electrónica y servicios de AFIP/ARCA.
+                            </div>
+
+                            <div class="agent-tags">
+
+                                <span class="tag">
+                                    Facturación
+                                </span>
+
+                                <span class="tag">
+                                    Próximamente
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% elif section == "agente_config" %}
+
+            <!-- ================================================= -->
+            <!-- CONFIGURACIÓN DEL AGENTE                         -->
+            <!-- ================================================= -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        CONFIGURACIÓN DEL AGENTE
+                    </span>
+
+                    <h2>
+                        Agente Técnico L1 — Dragonfish
+                    </h2>
+
+                    <p>
+                        Configurá la identidad, comportamiento,
+                        conocimiento y reglas de derivación del agente.
+                    </p>
+
+                </div>
+
+
+                <div class="agent-config-status">
+
+                    <span class="tag green">
+                        ● Activo
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- IDENTIDAD -->
+
+            <div class="config-card">
+
+                <div class="config-card-header">
+
+                    <div>
+                        <h3>Identidad</h3>
+
+                        <p>
+                            Información básica del agente.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Nombre del agente
+                        </label>
+
+                        <input
+                            type="text"
+                            value="Agente Técnico L1 — Dragonfish">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Producto
+                        </label>
+
+                        <select>
+
+                            <option selected>
+                                Dragonfish
+                            </option>
+
+                            <option>
+                                Lince
+                            </option>
+
+                            <option>
+                                Pantera
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nivel de atención
+                        </label>
+
+                        <select>
+
+                            <option selected>
+                                Soporte L1
+                            </option>
+
+                            <option>
+                                Soporte L2
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Canal principal
+                        </label>
+
+                        <select>
+
+                            <option selected>
+                                WhatsApp
+                            </option>
+
+                            <option>
+                                Playground
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- OBJETIVO -->
+
+            <div class="config-card">
+
+                <div class="config-card-header">
+
+                    <div>
+
+                        <h3>
+                            Objetivo
+                        </h3>
+
+                        <p>
+                            Definí qué debe hacer el agente.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Objetivo del agente
+                    </label>
+
+                    <textarea rows="5">Resolver consultas técnicas de primer nivel para usuarios de Dragonfish, utilizando exclusivamente la información disponible en la Knowledge Base, realizando preguntas de diagnóstico cuando sea necesario y derivando los casos que no puedan resolverse en L1.</textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPORTAMIENTO -->
+
+            <div class="config-card">
+
+                <div class="config-card-header">
+
+                    <div>
+
+                        <h3>
+                            Comportamiento
+                        </h3>
+
+                        <p>
+                            Reglas generales que debe seguir el agente.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="rule-list">
+
+                    <label class="rule-item">
+
+                        <input type="checkbox" checked>
+
+                        <span>
+                            No inventar procedimientos ni información técnica.
+                        </span>
+
+                    </label>
+
+
+                    <label class="rule-item">
+
+                        <input type="checkbox" checked>
+
+                        <span>
+                            Utilizar la Knowledge Base como fuente principal.
+                        </span>
+
+                    </label>
+
+
+                    <label class="rule-item">
+
+                        <input type="checkbox" checked>
+
+                        <span>
+                            Solicitar información adicional cuando sea necesaria.
+                        </span>
+
+                    </label>
+
+
+                    <label class="rule-item">
+
+                        <input type="checkbox" checked>
+
+                        <span>
+                            Validar con el usuario si la solución funcionó.
+                        </span>
+
+                    </label>
+
+
+                    <label class="rule-item">
+
+                        <input type="checkbox" checked>
+
+                        <span>
+                            Derivar el caso cuando no pueda resolverlo.
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- KNOWLEDGE BASE -->
+
+            <div class="config-card">
+
+                <div class="config-card-header">
+
+                    <div>
+
+                        <h3>
+                            Knowledge Base
+                        </h3>
+
+                        <p>
+                            Fuentes de información disponibles para este agente.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="knowledge-selected">
+
+                    <div class="knowledge-selected-icon">
+                        📚
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Knowledge Base — Dragonfish
+                        </strong>
+
+                        <span>
+                            Procedimientos, errores y documentación técnica.
+                        </span>
+
+                    </div>
+
+                    <span class="status active">
+                        Activa
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- DIAGNÓSTICO -->
+
+            <div class="config-card">
+
+                <div class="config-card-header">
+
+                    <div>
+
+                        <h3>
+                            Diagnóstico
+                        </h3>
+
+                        <p>
+                            Información que el agente debe identificar durante
+                            una conversación.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="diagnostic-grid">
+
+                    <div class="diagnostic-item">
+                        <span>Producto</span>
+                        <strong>Dragonfish</strong>
+                    </div>
+
+                    <div class="diagnostic-item">
+                        <span>Categoría</span>
+                        <strong>Identificar</strong>
+                    </div>
+
+                    <div class="diagnostic-item">
+                        <span>Subcategoría</span>
+                        <strong>Identificar</strong>
+                    </div>
+
+                    <div class="diagnostic-item">
+                        <span>Problema</span>
+                        <strong>Identificar</strong>
+                    </div>
+
+                    <div class="diagnostic-item">
+                        <span>Diagnóstico</span>
+                        <strong>Registrar</strong>
+                    </div>
+
+                    <div class="diagnostic-item">
+                        <span>Resultado</span>
+                        <strong>Validar</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DERIVACIONES -->
+
+            <div class="config-card">
+
+                <div class="config-card-header">
+
+                    <div>
+
+                        <h3>
+                            Reglas de derivación
+                        </h3>
+
+                        <p>
+                            Definí cuándo el agente debe derivar el caso.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="routing-table">
+
+                    <div class="routing-row routing-header">
+
+                        <span>Situación</span>
+                        <span>Derivar a</span>
+
+                    </div>
+
+
+                    <div class="routing-row">
+
+                        <span>
+                            Problema de base de datos
+                        </span>
+
+                        <strong>
+                            L2
+                        </strong>
+
+                    </div>
+
+
+                    <div class="routing-row">
+
+                        <span>
+                            Ecommerce / Tienda Nube
+                        </span>
+
+                        <strong>
+                            Ecommerce
+                        </strong>
+
+                    </div>
+
+
+                    <div class="routing-row">
+
+                        <span>
+                            Desarrollo / error de aplicación
+                        </span>
+
+                        <strong>
+                            Desarrollo
+                        </strong>
+
+                    </div>
+
+
+                    <div class="routing-row">
+
+                        <span>
+                            No existe procedimiento documentado
+                        </span>
+
+                        <strong>
+                            MDA
+                        </strong>
+
+                    </div>
+
+
+                    <div class="routing-row">
+
+                        <span>
+                            Procedimiento L1 no resuelve
+                        </span>
+
+                        <strong>
+                            L2
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCIONES -->
+
+            <div class="config-actions">
+
+                <button
+                    class="secondary-button"
+                    onclick="location.href='/agentes'">
+
+                    ← Volver
+
+                </button>
+
+
+                <button
+                    class="primary-button"
+                    onclick="alert('Configuración guardada correctamente')">
+
+                    Guardar configuración
+
+                </button>
+
+            </div>
+
+
+            {% elif section == "knowledge" %}
+
+            <!-- ================= KNOWLEDGE ================= -->
+
+            <div class="page-header">
+
+                <div>
+                    <p>
+                        Administrá las fuentes de conocimiento utilizadas
+                        por los agentes.
+                    </p>
+                </div>
+
+                <button class="primary-button">
+                    + Agregar fuente
+                </button>
+
+            </div>
+
+
+            <div class="knowledge-grid">
+
+                <div class="knowledge-card">
+
+                    <div class="knowledge-icon">
+                        📄
+                    </div>
+
+                    <div class="knowledge-content">
+
+                        <h3>Procedimientos Dragonfish</h3>
+
+                        <p>
+                            Manuales y procedimientos técnicos.
+                        </p>
+
+                        <div class="knowledge-meta">
+                            42 documentos · Actualizado hoy
+                        </div>
+
+                    </div>
+
+                    <span class="status active">
+                        Activa
+                    </span>
+
+                </div>
+
+
+                <div class="knowledge-card">
+
+                    <div class="knowledge-icon">
+                        📄
+                    </div>
+
+                    <div class="knowledge-content">
+
+                        <h3>Base de errores</h3>
+
+                        <p>
+                            Errores frecuentes y soluciones.
+                        </p>
+
+                        <div class="knowledge-meta">
+                            18 documentos · Actualizado ayer
+                        </div>
+
+                    </div>
+
+                    <span class="status active">
+                        Activa
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {% elif section == "conexiones" %}
+
+            <!-- ================= CONEXIONES ================= -->
+
+            <div class="page-header">
+
+                <div>
+                    <p>
+                        Conectá los agentes con sistemas y servicios externos.
+                    </p>
+                </div>
+
+                <button class="primary-button">
+                    + Nueva conexión
+                </button>
+
+            </div>
+
+
+            <div class="connection-grid">
+
+                <div class="connection-card">
+
+                    <div class="connection-icon">
+                        🔗
+                    </div>
+
+                    <div>
+
+                        <h3>API de productos</h3>
+
+                        <p>
+                            Identificación del producto y contexto
+                            del cliente.
+                        </p>
+
+                        <span class="connection-status">
+                            ● Conectada
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="connection-card">
+
+                    <div class="connection-icon">
+                        💬
+                    </div>
+
+                    <div>
+
+                        <h3>WhatsApp</h3>
+
+                        <p>
+                            Canal de atención para los agentes.
+                        </p>
+
+                        <span class="connection-status">
+                            ● Conectada
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="connection-card">
+
+                    <div class="connection-icon">
+                        🎫
+                    </div>
+
+                    <div>
+
+                        <h3>Sistema de tickets</h3>
+
+                        <p>
+                            Creación y derivación de casos.
+                        </p>
+
+                        <span class="connection-status pending">
+                            ● Pendiente
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% elif section == "metricas" %}
+
+            <!-- ================= METRICAS ================= -->
+
+            <div class="page-header">
+
+                <div>
+                    <p>
+                        Analizá el rendimiento de los agentes y las
+                        conversaciones.
+                    </p>
+                </div>
+
+                <button class="secondary-button">
+                    Últimos 30 días ▾
+                </button>
+
+            </div>
+
+
+            <div class="metrics-grid">
+
+                <div class="metric-card">
+                    <span>Consultas totales</span>
+                    <strong>1.284</strong>
+                    <small>+12,4% vs. período anterior</small>
+                </div>
+
+                <div class="metric-card">
+                    <span>Resueltas por IA</span>
+                    <strong>78%</strong>
+                    <small>1.002 conversaciones</small>
+                </div>
+
+                <div class="metric-card">
+                    <span>Derivadas</span>
+                    <strong>22%</strong>
+                    <small>282 conversaciones</small>
+                </div>
+
+                <div class="metric-card">
+                    <span>Tiempo promedio</span>
+                    <strong>4:32</strong>
+                    <small>minutos por consulta</small>
+                </div>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <div class="chart-header">
+
+                    <div>
+                        <h3>Consultas y resoluciones</h3>
+                        <p>Actividad de los agentes</p>
+                    </div>
+
+                </div>
+
+                <div class="fake-chart">
+
+                    <div class="chart-bars">
+                        <span style="height:40%"></span>
+                        <span style="height:55%"></span>
+                        <span style="height:48%"></span>
+                        <span style="height:70%"></span>
+                        <span style="height:63%"></span>
+                        <span style="height:82%"></span>
+                        <span style="height:76%"></span>
+                        <span style="height:92%"></span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% elif section == "playground" %}
+
+            <!-- ================= PLAYGROUND ================= -->
+
+            <div class="playground">
+
+                <div class="playground-header">
+
+                    <div>
+
+                        <h2>
+                            Probar agente
+                        </h2>
+
+                        <p>
+                            Probá el comportamiento del agente antes
+                            de conectarlo a un canal.
+                        </p>
+
+                    </div>
+
+                    <select class="agent-selector">
+
+                        <option>
+                            Agente Técnico L1 — Dragonfish
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="playground-window">
+
+                    <div class="chat">
+
+                        <div class="chat-message bot">
+
+                            <div class="message-avatar">
+                                🤖
+                            </div>
+
+                            <div class="message-content">
+
+                                <span class="message-author">
+                                    Agente Técnico L1
+                                </span>
+
+                                <p>
+                                    Hola. Soy el asistente técnico
+                                    de Dragonfish. ¿Qué inconveniente
+                                    estás teniendo?
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="chat-message user">
+
+                            <div class="message-content">
+
+                                <span class="message-author">
+                                    Usuario
+                                </span>
+
+                                <p>
+                                    No puedo obtener CAE cuando intento
+                                    facturar.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="chat-message bot">
+
+                            <div class="message-avatar">
+                                🤖
+                            </div>
+
+                            <div class="message-content">
+
+                                <span class="message-author">
+                                    Agente Técnico L1
+                                </span>
+
+                                <p>
+                                    Entiendo. Vamos a revisar el problema.
+                                    Primero necesito verificar algunos
+                                    datos de la configuración de
+                                    facturación electrónica.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="chat-input">
+
+                        <input
+                            type="text"
+                            placeholder="Escribí un mensaje..."
+                        >
+
+                        <button>
+                            Enviar
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ESTADO DEL AGENTE -->
+
+                <div class="agent-state">
+
+                    <h3>
+                        Estado de la conversación
+                    </h3>
+
+                    <div class="state-grid">
+
+                        <div>
+                            <span>Producto</span>
+                            <strong>Dragonfish</strong>
+                        </div>
+
+                        <div>
+                            <span>Categoría</span>
+                            <strong>Facturación</strong>
+                        </div>
+
+                        <div>
+                            <span>Subcategoría</span>
+                            <strong>CAE</strong>
+                        </div>
+
+                        <div>
+                            <span>Estado</span>
+                            <strong>Diagnóstico</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
 ```
