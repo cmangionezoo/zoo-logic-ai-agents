@@ -1,1700 +1,2237 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Zoo Logic AI Agents</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Verdana, Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: 245px;
-            background: #111827;
-            color: white;
-            padding: 25px 15px;
-        }
-
-        .logo {
-            font-size: 21px;
-            font-weight: bold;
-            padding: 0 12px 30px;
-        }
-
-        .logo span {
-            color: #3b82f6;
-        }
-
-        .menu-title {
-            font-size: 11px;
-            color: #9ca3af;
-            padding: 10px 12px;
-            text-transform: uppercase;
-        }
-
-        .menu a {
-            display: block;
-            color: #d1d5db;
-            text-decoration: none;
-            padding: 12px;
-            border-radius: 7px;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-
-        .menu a:hover,
-        .menu a.active {
-            background: #1f2937;
-            color: white;
-        }
-
-        /* MAIN */
-
-        .main {
-            flex: 1;
-        }
-
-        .topbar {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 22px 30px;
-        }
-
-        .topbar h1 {
-            margin: 0;
-            font-size: 23px;
-        }
-
-        .content {
-            padding: 30px;
-            max-width: 1250px;
-        }
-
-        /* CARDS */
-
-        .card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 22px;
-            margin-bottom: 20px;
-        }
-
-        .card h2 {
-            margin-top: 0;
-            font-size: 18px;
-        }
-
-        .card h3 {
-            margin-top: 0;
-            font-size: 15px;
-        }
-
-        .muted {
-            color: #6b7280;
-            font-size: 13px;
-        }
-
-        /* GRID */
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-        }
-
-        /* INPUTS */
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 7px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            border: 1px solid #d1d5db;
-            border-radius: 7px;
-            padding: 11px;
-            font-family: inherit;
-            font-size: 13px;
-            background: white;
-        }
-
-        textarea {
-            min-height: 110px;
-            resize: vertical;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        /* BUTTONS */
-
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button,
-        .button {
-            border: none;
-            border-radius: 7px;
-            padding: 11px 17px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 13px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .primary {
-            background: #2563eb;
-            color: white;
-        }
-
-        .secondary {
-            background: #e5e7eb;
-            color: #374151;
-        }
-
-        .danger {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        /* TAGS */
-
-        .tags {
-            display: flex;
-            gap: 7px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .tag {
-            background: #eff6ff;
-            color: #1d4ed8;
-            border-radius: 20px;
-            padding: 5px 9px;
-            font-size: 11px;
-        }
-
-        .tag.green {
-            background: #ecfdf5;
-            color: #047857;
-        }
-
-        .tag.gray {
-            background: #f3f4f6;
-            color: #4b5563;
-        }
-
-        /* STATS */
-
-        .stat {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .stat-number {
-            font-size: 25px;
-            font-weight: bold;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 5px;
-        }
-
-        /* CHECKBOX */
-
-        .check-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .check-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            font-size: 13px;
-        }
-
-        .check-item input {
-            width: auto;
-            margin-top: 2px;
-        }
-
-        /* ROUTING */
-
-        .routing-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .routing-table th,
-        .routing-table td {
-            border-bottom: 1px solid #e5e7eb;
-            padding: 12px 8px;
-            text-align: left;
-        }
-
-        .routing-table th {
-            color: #6b7280;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-
-        .route {
-            font-weight: bold;
-            color: #2563eb;
-        }
-
-        /* FLOW */
-
-        .flow {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .flow-step {
-            background: #f3f4f6;
-            border-radius: 7px;
-            padding: 10px 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .arrow {
-            color: #9ca3af;
-        }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 900px) {
-            .sidebar {
-                width: 200px;
-            }
-
-            .grid,
-            .grid-3,
-            .grid-4 {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-
 <body>
 
-<div class="layout">
+    <!-- ========================================================= -->
+    <!-- CONTENEDOR PRINCIPAL -->
+    <!-- ========================================================= -->
 
-    <!-- SIDEBAR -->
-
-    <aside class="sidebar">
-
-        <div class="logo">
-            Zoo Logic <span>AI Agents</span>
-        </div>
-
-        <div class="menu">
-
-            <div class="menu-title">Plataforma</div>
-
-            <a href="/" class="{% if section == None %}active{% endif %}">
-                🏠 Inicio
-            </a>
-
-            <a href="/agentes"
-               class="{% if section == 'agentes' or section == 'agente_config' %}active{% endif %}">
-                🤖 Agentes
-            </a>
-
-            <a href="/knowledge"
-               class="{% if section == 'knowledge' %}active{% endif %}">
-                📚 Knowledge Base
-            </a>
-
-            <a href="/conexiones"
-               class="{% if section == 'conexiones' %}active{% endif %}">
-                🔗 Conexiones
-            </a>
-
-            <a href="/metricas"
-               class="{% if section == 'metricas' %}active{% endif %}">
-                📊 Métricas
-            </a>
-
-            <a href="/playground"
-               class="{% if section == 'playground' %}active{% endif %}">
-                🧪 Playground
-            </a>
-
-        </div>
-
-    </aside>
+    <div class="app-container">
 
 
-    <!-- MAIN -->
+        <!-- ===================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ===================================================== -->
 
-    <main class="main">
+        <aside class="sidebar">
 
-        <div class="topbar">
+            <div class="brand">
 
-            {% if section == "agente_config" %}
-                <h1>Configurar agente</h1>
-            {% elif section == "agentes" %}
-                <h1>Agentes</h1>
-            {% elif section == "knowledge" %}
-                <h1>Knowledge Base</h1>
-            {% elif section == "conexiones" %}
-                <h1>Conexiones</h1>
-            {% elif section == "metricas" %}
-                <h1>Métricas</h1>
-            {% elif section == "playground" %}
-                <h1>Playground</h1>
-            {% else %}
-                <h1>Inicio</h1>
-            {% endif %}
+                <div class="brand-title">
+                    Zoo Logic
+                </div>
 
-        </div>
+                <div class="brand-subtitle">
+                    AI Agents
+                </div>
+
+            </div>
 
 
-        <div class="content">
+            <nav class="sidebar-nav">
+
+                <a
+                    href="/"
+                    class="{% if section is none %}active{% endif %}"
+                >
+                    🏠
+                    <span>Inicio</span>
+                </a>
 
 
-            <!-- ============================= -->
+                <a
+                    href="/agentes"
+                    class="{% if section == 'agentes' or section == 'agente_config' %}active{% endif %}"
+                >
+                    🤖
+                    <span>Agentes</span>
+                </a>
+
+
+                <a
+                    href="/knowledge"
+                    class="{% if section == 'knowledge' %}active{% endif %}"
+                >
+                    📚
+                    <span>Knowledge Base</span>
+                </a>
+
+
+                <a
+                    href="/conexiones"
+                    class="{% if section == 'conexiones' %}active{% endif %}"
+                >
+                    🔗
+                    <span>Conexiones</span>
+                </a>
+
+
+                <a
+                    href="/metricas"
+                    class="{% if section == 'metricas' %}active{% endif %}"
+                >
+                    📊
+                    <span>Métricas</span>
+                </a>
+
+
+                <a
+                    href="/playground"
+                    class="{% if section == 'playground' %}active{% endif %}"
+                >
+                    🧪
+                    <span>Playground</span>
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-footer">
+
+                <div class="system-status">
+
+                    <span class="status-dot"></span>
+
+                    Sistema operativo
+
+                </div>
+
+                <div class="version">
+                    Zoo Logic AI Agents · v0.1
+                </div>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- ===================================================== -->
+        <!-- CONTENIDO -->
+        <!-- ===================================================== -->
+
+        <main class="main-content">
+
+
+            <!-- ================================================= -->
+            <!-- TOPBAR -->
+            <!-- ================================================= -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <div class="breadcrumb">
+                        Zoo Logic / AI Agents
+                    </div>
+
+                    <div class="page-title">
+
+                        {% if section == "knowledge" %}
+
+                            Knowledge Base
+
+                        {% elif section == "agentes" %}
+
+                            Agentes
+
+                        {% elif section == "agente_config" %}
+
+                            Configuración del agente
+
+                        {% elif section == "conexiones" %}
+
+                            Conexiones
+
+                        {% elif section == "metricas" %}
+
+                            Métricas
+
+                        {% elif section == "playground" %}
+
+                            Playground
+
+                        {% else %}
+
+                            Inicio
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <div class="environment">
+                        Producción
+                    </div>
+
+                    <div class="user-avatar">
+                        ZL
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- ================================================= -->
             <!-- INICIO -->
-            <!-- ============================= -->
+            <!-- ================================================= -->
 
-            {% if section == None %}
+            {% if section is none %}
 
-            <div class="card">
+            <section class="content-section">
 
-                <h2>Zoo Logic AI Agents</h2>
+                <div class="hero">
 
-                <p class="muted">
-                    Plataforma para crear, configurar, probar y monitorear
-                    agentes de inteligencia artificial para soporte.
-                </p>
+                    <div>
 
-            </div>
+                        <div class="eyebrow">
+                            ZOO LOGIC · INTELIGENCIA ARTIFICIAL
+                        </div>
 
+                        <h1>
+                            AI Agents
+                        </h1>
 
-            <div class="grid-4">
+                        <p>
+                            Plataforma central para crear, configurar,
+                            probar y monitorear agentes de inteligencia
+                            artificial especializados.
+                        </p>
 
-                <div class="stat">
-                    <div class="stat-number">1</div>
-                    <div class="stat-label">Agentes activos</div>
+                    </div>
+
                 </div>
 
-                <div class="stat">
-                    <div class="stat-number">1</div>
-                    <div class="stat-label">Knowledge Bases</div>
+
+                <div class="cards-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Agentes activos
+                        </div>
+
+                        <div class="stat-value">
+                            1
+                        </div>
+
+                        <div class="stat-description">
+                            Agente Técnico L1
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Knowledge Base
+                        </div>
+
+                        <div class="stat-value">
+                            0
+                        </div>
+
+                        <div class="stat-description">
+                            Documentos incorporados
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Consultas
+                        </div>
+
+                        <div class="stat-value">
+                            1.284
+                        </div>
+
+                        <div class="stat-description">
+                            Consultas procesadas
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Resolución L1
+                        </div>
+
+                        <div class="stat-value">
+                            78%
+                        </div>
+
+                        <div class="stat-description">
+                            Sin derivación
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="stat">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Conversaciones hoy</div>
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h2>
+                                Arquitectura
+                            </h2>
+
+                            <p>
+                                Los agentes utilizan conocimiento,
+                                herramientas y conexiones para resolver
+                                consultas.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="architecture">
+
+                        <div class="architecture-box">
+                            Canal
+                            <strong>WhatsApp</strong>
+                        </div>
+
+                        <div class="architecture-arrow">
+                            →
+                        </div>
+
+                        <div class="architecture-box">
+                            Agente
+                            <strong>IA</strong>
+                        </div>
+
+                        <div class="architecture-arrow">
+                            →
+                        </div>
+
+                        <div class="architecture-box">
+                            Knowledge Base
+                            <strong>Documentación</strong>
+                        </div>
+
+                        <div class="architecture-arrow">
+                            →
+                        </div>
+
+                        <div class="architecture-box">
+                            Resultado
+                            <strong>Resolver / Derivar</strong>
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="stat">
-                    <div class="stat-number">0%</div>
-                    <div class="stat-label">Resolución IA</div>
-                </div>
-
-            </div>
+            </section>
 
 
-            <!-- ============================= -->
+            <!-- ================================================= -->
             <!-- AGENTES -->
-            <!-- ============================= -->
+            <!-- ================================================= -->
 
             {% elif section == "agentes" %}
 
-            <div class="card">
+            <section class="content-section">
 
-                <h2>Agente Técnico L1 — Dragonfish</h2>
-
-                <div class="tags">
-
-                    <span class="tag">Dragonfish</span>
-                    <span class="tag green">Activo</span>
-                    <span class="tag gray">L1</span>
-                    <span class="tag gray">WhatsApp</span>
-
-                </div>
-
-                <p class="muted">
-                    Agente especializado en soporte técnico de primer nivel
-                    para Dragonfish.
-                </p>
-
-                <div class="grid">
+                <div class="section-heading">
 
                     <div>
-                        <strong>Modelo</strong>
-                        <p class="muted">OpenAI</p>
+
+                        <h1>
+                            Agentes
+                        </h1>
+
+                        <p>
+                            Administrá los agentes de inteligencia
+                            artificial de Zoo Logic.
+                        </p>
+
                     </div>
 
-                    <div>
-                        <strong>Knowledge Base</strong>
-                        <p class="muted">Dragonfish</p>
-                    </div>
-
-                    <div>
-                        <strong>Nivel</strong>
-                        <p class="muted">Soporte L1</p>
-                    </div>
-
-                    <div>
-                        <strong>Canal</strong>
-                        <p class="muted">WhatsApp</p>
-                    </div>
-
-                </div>
-
-
-                <div class="buttons">
-
-                    <a class="button primary"
-                       href="/agentes/configurar">
-                        Configurar
-                    </a>
-
-                    <a class="button secondary"
-                       href="/playground">
-                        Playground
-                    </a>
-
-                    <button class="danger"
-                            onclick="alert('El agente fue pausado')">
-                        Pausar
+                    <button class="primary">
+                        + Crear agente
                     </button>
 
                 </div>
 
-            </div>
+
+                <div class="agent-card">
+
+                    <div class="agent-card-header">
+
+                        <div>
+
+                            <div class="agent-title">
+                                🤖 Agente Técnico L1 — Dragonfish
+                            </div>
+
+                            <div class="agent-tags">
+
+                                <span class="tag">
+                                    Dragonfish
+                                </span>
+
+                                <span class="tag green">
+                                    Activo
+                                </span>
+
+                                <span class="tag">
+                                    L1
+                                </span>
+
+                                <span class="tag">
+                                    WhatsApp
+                                </span>
+
+                            </div>
+
+                        </div>
 
 
-            <div class="grid-4">
+                        <div class="agent-actions">
 
-                <div class="stat">
-                    <div class="stat-number">1.284</div>
-                    <div class="stat-label">Conversaciones</div>
-                </div>
+                            <a
+                                href="/agentes/configurar"
+                                class="secondary"
+                            >
+                                Configurar
+                            </a>
 
-                <div class="stat">
-                    <div class="stat-number">78%</div>
-                    <div class="stat-label">Resueltas</div>
-                </div>
+                            <a
+                                href="/playground"
+                                class="secondary"
+                            >
+                                Playground
+                            </a>
 
-                <div class="stat">
-                    <div class="stat-number">22%</div>
-                    <div class="stat-label">Derivadas</div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-number">Activo</div>
-                    <div class="stat-label">Estado</div>
-                </div>
-
-            </div>
-
-
-            <div class="card">
-
-                <h2>Próximamente</h2>
-
-                <div class="grid">
-
-                    <div>
-
-                        <h3>Agente Ecommerce</h3>
-
-                        <p class="muted">
-                            Soporte técnico para integraciones Ecommerce,
-                            Tienda Nube y plataformas relacionadas.
-                        </p>
-
-                    </div>
-
-                    <div>
-
-                        <h3>Agente Facturación Electrónica</h3>
-
-                        <p class="muted">
-                            Diagnóstico y asistencia sobre facturación
-                            electrónica y servicios asociados.
-                        </p>
+                        </div>
 
                     </div>
 
+
+                    <div class="agent-info-grid">
+
+                        <div>
+                            <span>Modelo</span>
+                            <strong>OpenAI</strong>
+                        </div>
+
+                        <div>
+                            <span>Knowledge Base</span>
+                            <strong>Dragonfish</strong>
+                        </div>
+
+                        <div>
+                            <span>Nivel</span>
+                            <strong>L1</strong>
+                        </div>
+
+                        <div>
+                            <span>Canal</span>
+                            <strong>WhatsApp</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="agent-stats">
+
+                        <div>
+
+                            <strong>
+                                1.284
+                            </strong>
+
+                            <span>
+                                Consultas
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                78%
+                            </strong>
+
+                            <span>
+                                Resolución
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                22%
+                            </strong>
+
+                            <span>
+                                Derivaciones
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong class="green-text">
+                                Activo
+                            </strong>
+
+                            <span>
+                                Estado
+                            </span>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-            </div>
+            </section>
 
 
-            <!-- ============================= -->
+            <!-- ================================================= -->
             <!-- CONFIGURACIÓN DEL AGENTE -->
-            <!-- ============================= -->
+            <!-- ================================================= -->
 
             {% elif section == "agente_config" %}
 
-            <div class="card">
+            <section class="content-section">
 
-                <h2>Identidad del agente</h2>
-
-                <p class="muted">
-                    Definí quién es el agente, qué producto atiende
-                    y por qué canal trabaja.
-                </p>
-
-                <div class="grid">
+                <div class="section-heading">
 
                     <div>
 
-                        <label>Nombre del agente</label>
+                        <h1>
+                            Agente Técnico L1 — Dragonfish
+                        </h1>
 
-                        <input type="text"
-                               value="Agente Técnico L1 — Dragonfish">
+                        <p>
+                            Configuración del comportamiento,
+                            diagnóstico y derivación del agente.
+                        </p>
 
                     </div>
 
-                    <div>
+                    <a
+                        href="/agentes"
+                        class="secondary"
+                    >
+                        ← Volver
+                    </a>
 
-                        <label>Producto</label>
+                </div>
 
-                        <select>
 
-                            <option selected>Dragonfish</option>
-                            <option>Pantera</option>
-                            <option>Lince</option>
+                <!-- IDENTIDAD -->
 
-                        </select>
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h2>
+                                Identidad
+                            </h2>
+
+                            <p>
+                                Información básica del agente.
+                            </p>
+
+                        </div>
 
                     </div>
 
-                    <div>
 
-                        <label>Nivel de soporte</label>
+                    <div class="grid">
 
-                        <select>
+                        <div>
 
-                            <option selected>L1</option>
-                            <option>L2</option>
-                            <option>L3</option>
+                            <label>
+                                Nombre del agente
+                            </label>
 
-                        </select>
+                            <input
+                                type="text"
+                                value="Agente Técnico L1 — Dragonfish"
+                            >
 
-                    </div>
+                        </div>
 
-                    <div>
 
-                        <label>Canal</label>
+                        <div>
 
-                        <select>
+                            <label>
+                                Producto
+                            </label>
 
-                            <option selected>WhatsApp</option>
-                            <option>Web</option>
-                            <option>Teams</option>
+                            <select>
 
-                        </select>
+                                <option selected>
+                                    Dragonfish
+                                </option>
+
+                                <option>
+                                    Pantera
+                                </option>
+
+                                <option>
+                                    Lince
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Nivel
+                            </label>
+
+                            <select>
+
+                                <option selected>
+                                    L1
+                                </option>
+
+                                <option>
+                                    L2
+                                </option>
+
+                                <option>
+                                    L3
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Canal
+                            </label>
+
+                            <select>
+
+                                <option selected>
+                                    WhatsApp
+                                </option>
+
+                                <option>
+                                    Web
+                                </option>
+
+                                <option>
+                                    Teams
+                                </option>
+
+                            </select>
+
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
 
 
-            <!-- OBJETIVO -->
+                <!-- OBJETIVO -->
 
-            <div class="card">
+                <div class="panel">
 
-                <h2>Objetivo del agente</h2>
+                    <div class="panel-header">
 
-                <p class="muted">
-                    Definí qué debe intentar lograr durante una conversación.
-                </p>
+                        <div>
 
-                <textarea>Atender consultas técnicas de primer nivel sobre Dragonfish, comprender el problema del usuario, realizar un diagnóstico guiado utilizando procedimientos documentados, proponer una solución y validar el resultado. Si el problema no puede resolverse en L1, debe derivarlo al equipo correspondiente con un resumen técnico del caso.</textarea>
+                            <h2>
+                                Objetivo
+                            </h2>
 
-            </div>
+                            <p>
+                                Qué debe hacer el agente.
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
-            <!-- COMPORTAMIENTO -->
-
-            <div class="card">
-
-                <h2>Comportamiento</h2>
-
-                <p class="muted">
-                    Reglas que el agente debe respetar durante toda la conversación.
-                </p>
-
-                <div class="check-list">
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        No inventar procedimientos ni soluciones.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        Utilizar únicamente información respaldada por la Knowledge Base.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        Solicitar información cuando los datos del problema sean insuficientes.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        Realizar preguntas de diagnóstico antes de proponer una solución.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        Explicar los pasos de forma clara y ordenada.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        Validar con el usuario si la solución funcionó.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        Derivar cuando el problema exceda las capacidades de L1.
-                    </label>
+                    <textarea>
+Atender consultas técnicas de nivel 1 sobre Dragonfish, utilizando exclusivamente procedimientos documentados en la Knowledge Base. Diagnosticar el problema, guiar al usuario paso a paso, validar el resultado y derivar cuando corresponda.
+                    </textarea>
 
                 </div>
 
-            </div>
 
 
-            <!-- LIMITES -->
+                <!-- COMPORTAMIENTO -->
 
-            <div class="card">
+                <div class="panel">
 
-                <h2>Límites del agente</h2>
+                    <div class="panel-header">
 
-                <p class="muted">
-                    Acciones que el agente no debe realizar.
-                </p>
+                        <div>
 
-                <div class="check-list">
+                            <h2>
+                                Comportamiento
+                            </h2>
 
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        No inventar información técnica.
-                    </label>
+                            <p>
+                                Reglas que debe seguir el agente.
+                            </p>
 
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        No ejecutar modificaciones directamente sobre bases de datos.
-                    </label>
+                        </div>
 
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        No indicar procedimientos de L2 como si fueran procedimientos de L1.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        No afirmar que un problema está resuelto sin validarlo.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        No continuar intentando soluciones indefinidamente.
-                    </label>
-
-                    <label class="check-item">
-                        <input type="checkbox" checked>
-                        No responder sobre procedimientos que no estén documentados.
-                    </label>
-
-                </div>
-
-            </div>
-
-
-            <!-- DIAGNÓSTICO -->
-
-            <div class="card">
-
-                <h2>Información que debe construir durante el diagnóstico</h2>
-
-                <p class="muted">
-                    El agente irá completando estos datos a medida que avanza
-                    la conversación.
-                </p>
-
-                <div class="grid-3">
-
-                    <div>
-                        <label>Producto</label>
-                        <input type="text"
-                               value="Dragonfish"
-                               readonly>
                     </div>
 
-                    <div>
-                        <label>Categoría</label>
-                        <input type="text"
-                               placeholder="Ej. Facturación Electrónica">
-                    </div>
 
-                    <div>
-                        <label>Subcategoría</label>
-                        <input type="text"
-                               placeholder="Ej. CAE">
-                    </div>
+                    <div class="check-grid">
 
-                    <div>
-                        <label>Problema</label>
-                        <input type="text"
-                               placeholder="Descripción del problema">
-                    </div>
+                        <label>
+                            <input type="checkbox" checked>
+                            No inventar procedimientos
+                        </label>
 
-                    <div>
-                        <label>Diagnóstico</label>
-                        <input type="text"
-                               placeholder="Diagnóstico determinado">
-                    </div>
+                        <label>
+                            <input type="checkbox" checked>
+                            Utilizar únicamente la Knowledge Base
+                        </label>
 
-                    <div>
-                        <label>Resultado</label>
-                        <select>
+                        <label>
+                            <input type="checkbox" checked>
+                            Solicitar información faltante
+                        </label>
 
-                            <option selected>Pendiente</option>
-                            <option>Resuelto</option>
-                            <option>No resuelto</option>
+                        <label>
+                            <input type="checkbox" checked>
+                            Realizar preguntas de diagnóstico
+                        </label>
 
-                        </select>
+                        <label>
+                            <input type="checkbox" checked>
+                            Explicar claramente los pasos
+                        </label>
+
+                        <label>
+                            <input type="checkbox" checked>
+                            Validar la solución
+                        </label>
+
+                        <label>
+                            <input type="checkbox" checked>
+                            Derivar cuando esté fuera de L1
+                        </label>
+
                     </div>
 
                 </div>
 
-            </div>
 
 
-            <!-- FLUJO -->
+                <!-- LIMITES -->
 
-            <div class="card">
+                <div class="panel">
 
-                <h2>Flujo de atención</h2>
+                    <div class="panel-header">
 
-                <p class="muted">
-                    Secuencia general que seguirá el agente.
-                </p>
+                        <div>
 
-                <div class="flow">
+                            <h2>
+                                Límites
+                            </h2>
 
-                    <div class="flow-step">
-                        1. Recibir problema
+                            <p>
+                                Acciones que el agente no puede realizar.
+                            </p>
+
+                        </div>
+
                     </div>
 
-                    <div class="arrow">→</div>
 
-                    <div class="flow-step">
-                        2. Recopilar información
-                    </div>
+                    <div class="check-grid">
 
-                    <div class="arrow">→</div>
+                        <label>
+                            <input type="checkbox" checked>
+                            No inventar información técnica
+                        </label>
 
-                    <div class="flow-step">
-                        3. Diagnosticar
-                    </div>
+                        <label>
+                            <input type="checkbox" checked>
+                            No realizar modificaciones directas en BD
+                        </label>
 
-                    <div class="arrow">→</div>
+                        <label>
+                            <input type="checkbox" checked>
+                            No ejecutar procedimientos L2 como L1
+                        </label>
 
-                    <div class="flow-step">
-                        4. Aplicar procedimiento
-                    </div>
+                        <label>
+                            <input type="checkbox" checked>
+                            No indicar "resuelto" sin validación
+                        </label>
 
-                    <div class="arrow">→</div>
+                        <label>
+                            <input type="checkbox" checked>
+                            No realizar intentos indefinidos
+                        </label>
 
-                    <div class="flow-step">
-                        5. Validar
-                    </div>
+                        <label>
+                            <input type="checkbox" checked>
+                            No utilizar procedimientos no documentados
+                        </label>
 
-                    <div class="arrow">→</div>
-
-                    <div class="flow-step">
-                        6. Resolver / Derivar
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- DERIVACIONES -->
-
-            <div class="card">
-
-                <h2>Reglas de derivación</h2>
-
-                <p class="muted">
-                    Determinan cuándo el agente debe dejar de intentar resolver
-                    el caso y enviarlo al equipo correspondiente.
-                </p>
-
-                <table class="routing-table">
-
-                    <thead>
-
-                        <tr>
-                            <th>Situación</th>
-                            <th>Destino</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Problema de base de datos</td>
-                            <td class="route">L2</td>
-                        </tr>
-
-                        <tr>
-                            <td>Ecommerce / Tienda Nube</td>
-                            <td class="route">Ecommerce</td>
-                        </tr>
-
-                        <tr>
-                            <td>Desarrollo / error de aplicación</td>
-                            <td class="route">Desarrollo</td>
-                        </tr>
-
-                        <tr>
-                            <td>No existe procedimiento documentado</td>
-                            <td class="route">MDA</td>
-                        </tr>
-
-                        <tr>
-                            <td>Procedimiento L1 no resuelve</td>
-                            <td class="route">L2</td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- RESUMEN DE DERIVACIÓN -->
-
-            <div class="card">
-
-                <h2>Información para la derivación</h2>
-
-                <p class="muted">
-                    Cuando el agente derive un caso, deberá entregar un resumen
-                    estructurado para evitar que el usuario tenga que explicar
-                    nuevamente el problema.
-                </p>
-
-                <div class="grid-3">
-
-                    <div>
-                        <label>Problema</label>
-                        <input type="text"
-                               placeholder="Qué informó el usuario">
-                    </div>
-
-                    <div>
-                        <label>Diagnóstico</label>
-                        <input type="text"
-                               placeholder="Qué se pudo determinar">
-                    </div>
-
-                    <div>
-                        <label>Procedimiento realizado</label>
-                        <input type="text"
-                               placeholder="Qué se intentó">
-                    </div>
-
-                    <div>
-                        <label>Resultado</label>
-                        <input type="text"
-                               placeholder="Qué ocurrió">
-                    </div>
-
-                    <div>
-                        <label>Destino</label>
-                        <select>
-
-                            <option selected>Seleccionar</option>
-                            <option>L2</option>
-                            <option>Ecommerce</option>
-                            <option>Desarrollo</option>
-                            <option>MDA</option>
-
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Motivo de derivación</label>
-                        <input type="text"
-                               placeholder="Por qué se deriva">
                     </div>
 
                 </div>
 
-            </div>
 
 
-            <!-- GUARDAR -->
+                <!-- DIAGNÓSTICO -->
 
-            <div class="buttons">
+                <div class="panel">
 
-                <a href="/agentes"
-                   class="button secondary">
-                    ← Volver
-                </a>
+                    <div class="panel-header">
 
-                <button class="primary"
-                        onclick="alert('Configuración guardada correctamente')">
-                    Guardar configuración
-                </button>
+                        <div>
 
-            </div>
+                            <h2>
+                                Datos de diagnóstico
+                            </h2>
+
+                            <p>
+                                Información que el agente debe identificar
+                                durante la conversación.
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
-            <!-- ============================= -->
-            <!-- KNOWLEDGE -->
-            <!-- ============================= -->
+                    <div class="diagnostic-flow">
+
+                        <div>
+                            Producto
+                        </div>
+
+                        <div>
+                            Categoría
+                        </div>
+
+                        <div>
+                            Subcategoría
+                        </div>
+
+                        <div>
+                            Problema
+                        </div>
+
+                        <div>
+                            Diagnóstico
+                        </div>
+
+                        <div>
+                            Resultado
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- FLUJO -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h2>
+                                Flujo de atención
+                            </h2>
+
+                            <p>
+                                Secuencia general de resolución.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flow">
+
+                        <div class="flow-step">
+                            1<br>
+                            <strong>
+                                Recibir problema
+                            </strong>
+                        </div>
+
+                        <div class="flow-arrow">
+                            →
+                        </div>
+
+                        <div class="flow-step">
+                            2<br>
+                            <strong>
+                                Obtener información
+                            </strong>
+                        </div>
+
+                        <div class="flow-arrow">
+                            →
+                        </div>
+
+                        <div class="flow-step">
+                            3<br>
+                            <strong>
+                                Diagnosticar
+                            </strong>
+                        </div>
+
+                        <div class="flow-arrow">
+                            →
+                        </div>
+
+                        <div class="flow-step">
+                            4<br>
+                            <strong>
+                                Aplicar procedimiento
+                            </strong>
+                        </div>
+
+                        <div class="flow-arrow">
+                            →
+                        </div>
+
+                        <div class="flow-step">
+                            5<br>
+                            <strong>
+                                Validar
+                            </strong>
+                        </div>
+
+                        <div class="flow-arrow">
+                            →
+                        </div>
+
+                        <div class="flow-step">
+                            6<br>
+                            <strong>
+                                Resolver / Derivar
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DERIVACIONES -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h2>
+                                Reglas de derivación
+                            </h2>
+
+                            <p>
+                                Destino cuando el agente no puede resolver
+                                el incidente.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Situación</th>
+                                <th>Destino</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+                                <td>Base de Datos</td>
+                                <td>L2</td>
+                            </tr>
+
+                            <tr>
+                                <td>Ecommerce / Tienda Nube</td>
+                                <td>Ecommerce</td>
+                            </tr>
+
+                            <tr>
+                                <td>Error de aplicación / Desarrollo</td>
+                                <td>Desarrollo</td>
+                            </tr>
+
+                            <tr>
+                                <td>No existe procedimiento documentado</td>
+                                <td>MDA</td>
+                            </tr>
+
+                            <tr>
+                                <td>Procedimiento L1 no resuelve</td>
+                                <td>L2</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- RESUMEN DE DERIVACIÓN -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h2>
+                                Resumen de derivación
+                            </h2>
+
+                            <p>
+                                Información que deberá entregar el agente
+                                cuando derive un caso.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid">
+
+                        <div>
+
+                            <label>
+                                Problema
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Problema informado"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Diagnóstico
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Diagnóstico realizado"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Procedimiento aplicado
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Procedimiento utilizado"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Resultado
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Resultado obtenido"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Destino
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Equipo de destino"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                Motivo
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Motivo de derivación"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="buttons">
+
+                        <button
+                            class="primary"
+                            onclick="alert('Configuración guardada correctamente')"
+                        >
+                            Guardar configuración
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================================================= -->
+            <!-- KNOWLEDGE BASE -->
+            <!-- ================================================= -->
 
             {% elif section == "knowledge" %}
 
-<!-- ============================= -->
-<!-- KNOWLEDGE BASE -->
-<!-- ============================= -->
+            <section class="content-section">
 
-<div class="card">
+                <div class="section-heading">
 
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:20px;">
+                    <div>
 
-        <div>
-            <h2>Knowledge Base</h2>
+                        <h1>
+                            Knowledge Base
+                        </h1>
 
-            <p class="muted">
-                Documentación que utilizan los agentes para diagnosticar
-                problemas y proponer soluciones.
-            </p>
-        </div>
+                        <p>
+                            Documentación que utilizan los agentes como
+                            fuente de conocimiento.
+                        </p>
 
-        <button class="primary"
-                onclick="document.getElementById('uploadForm').style.display='block'">
-            + Agregar documento
-        </button>
+                    </div>
 
-    </div>
+                    <a
+                        href="#agregar-documento"
+                        class="primary"
+                    >
+                        + Agregar documento
+                    </a>
 
-</div>
+                </div>
 
 
-<!-- SELECTOR DE KB -->
 
-<div class="card">
+                <!-- RESUMEN -->
 
-    <h3>Knowledge Base seleccionada</h3>
+                <div class="cards-grid">
 
-    <div class="grid">
+                    <div class="stat-card">
 
-        <div>
+                        <div class="stat-label">
+                            Documentos
+                        </div>
 
-            <label>Producto</label>
+                        <div class="stat-value">
+                            {{ documentos|length }}
+                        </div>
 
-            <select>
+                        <div class="stat-description">
+                            Documentos cargados
+                        </div>
 
-                <option selected>Dragonfish</option>
-                <option>Pantera</option>
-                <option>Lince</option>
+                    </div>
 
-            </select>
 
-        </div>
+                    <div class="stat-card">
 
-        <div>
+                        <div class="stat-label">
+                            Vigentes
+                        </div>
 
-            <label>Estado</label>
+                        <div class="stat-value">
 
-            <select>
+                            {{ documentos
+                               |selectattr("estado", "equalto", "Vigente")
+                               |list
+                               |length }}
 
-                <option selected>Todos</option>
-                <option>Vigentes</option>
-                <option>Pendientes de revisión</option>
-                <option>Archivados</option>
+                        </div>
 
-            </select>
+                        <div class="stat-description">
+                            Disponibles para los agentes
+                        </div>
 
-        </div>
+                    </div>
 
-    </div>
 
-</div>
+                    <div class="stat-card">
 
+                        <div class="stat-label">
+                            Pendientes
+                        </div>
 
-<!-- RESUMEN -->
+                        <div class="stat-value">
 
-<div class="grid-4">
+                            {{ documentos
+                               |selectattr("estado", "equalto", "Pendiente de revisión")
+                               |list
+                               |length }}
 
-    <div class="stat">
+                        </div>
 
-        <div class="stat-number">0</div>
+                        <div class="stat-description">
+                            Pendientes de revisión
+                        </div>
 
-        <div class="stat-label">
-            Documentos
-        </div>
+                    </div>
 
-    </div>
 
+                    <div class="stat-card">
 
-    <div class="stat">
+                        <div class="stat-label">
+                            Archivados
+                        </div>
 
-        <div class="stat-number">0</div>
+                        <div class="stat-value">
 
-        <div class="stat-label">
-            Vigentes
-        </div>
+                            {{ documentos
+                               |selectattr("estado", "equalto", "Archivado")
+                               |list
+                               |length }}
 
-    </div>
+                        </div>
 
+                        <div class="stat-description">
+                            Fuera de uso
+                        </div>
 
-    <div class="stat">
+                    </div>
 
-        <div class="stat-number">0</div>
+                </div>
 
-        <div class="stat-label">
-            Pendientes de revisión
-        </div>
 
-    </div>
 
+                <!-- DOCUMENTOS -->
 
-    <div class="stat">
+                <div class="panel">
 
-        <div class="stat-number">0</div>
+                    <div class="panel-header">
 
-        <div class="stat-label">
-            Archivados
-        </div>
+                        <div>
 
-    </div>
+                            <h2>
+                                Documentos
+                            </h2>
 
-</div>
+                            <p>
+                                Documentación disponible en la Knowledge
+                                Base.
+                            </p>
 
+                        </div>
 
-<!-- CATEGORÍAS -->
+                    </div>
 
-<div class="card">
 
-    <h2>Categorías</h2>
+                    <div style="overflow-x:auto;">
 
-    <p class="muted">
-        Organización de la documentación de Dragonfish.
-    </p>
+                        <table>
 
+                            <thead>
 
-    <div class="grid-3">
+                                <tr>
 
-        <div class="stat">
+                                    <th>
+                                        Documento
+                                    </th>
 
-            <div class="stat-number">0</div>
+                                    <th>
+                                        Producto
+                                    </th>
 
-            <div class="stat-label">
-                Facturación Electrónica
-            </div>
+                                    <th>
+                                        Categoría
+                                    </th>
 
-        </div>
+                                    <th>
+                                        Nivel
+                                    </th>
 
+                                    <th>
+                                        Estado
+                                    </th>
 
-        <div class="stat">
+                                    <th>
+                                        Acciones
+                                    </th>
 
-            <div class="stat-number">0</div>
+                                </tr>
 
-            <div class="stat-label">
-                Mantenimiento
-            </div>
+                            </thead>
 
-        </div>
 
+                            <tbody>
 
-        <div class="stat">
+                                {% if documentos %}
 
-            <div class="stat-number">0</div>
+                                    {% for documento in documentos %}
 
-            <div class="stat-label">
-                Base de Datos
-            </div>
+                                    <tr>
 
-        </div>
+                                        <td>
+                                            📄
+                                            {{ documento.nombre or documento.archivo }}
+                                        </td>
 
 
-        <div class="stat">
+                                        <td>
+                                            {{ documento.producto }}
+                                        </td>
 
-            <div class="stat-number">0</div>
 
-            <div class="stat-label">
-                Configuración
-            </div>
+                                        <td>
 
-        </div>
+                                            {{ documento.categoria }}
 
+                                            {% if documento.subcategoria %}
 
-        <div class="stat">
+                                                <br>
 
-            <div class="stat-number">0</div>
+                                                <small
+                                                    style="color:#6b7280;"
+                                                >
+                                                    {{ documento.subcategoria }}
+                                                </small>
 
-            <div class="stat-label">
-                Ecommerce
-            </div>
+                                            {% endif %}
 
-        </div>
+                                        </td>
 
 
-        <div class="stat">
+                                        <td>
+                                            {{ documento.nivel }}
+                                        </td>
 
-            <div class="stat-number">0</div>
 
-            <div class="stat-label">
-                Otros
-            </div>
+                                        <td>
 
-        </div>
+                                            {% if documento.estado == "Vigente" %}
 
-    </div>
+                                                <span class="tag green">
+                                                    Vigente
+                                                </span>
 
-</div>
+                                            {% elif documento.estado == "Pendiente de revisión" %}
 
+                                                <span class="tag yellow">
+                                                    Pendiente
+                                                </span>
 
-<!-- FORMULARIO DE CARGA -->
+                                            {% else %}
 
-<div class="card"
-     id="uploadForm"
-     style="display:none;">
+                                                <span class="tag">
+                                                    Archivado
+                                                </span>
 
-    <h2>Agregar documento</h2>
+                                            {% endif %}
 
-    <p class="muted">
-        Incorporá un documento a la Knowledge Base y definí cómo debe
-        utilizarlo el agente.
-    </p>
+                                        </td>
 
 
-    <div class="grid">
+                                        <td>
 
-        <div>
+                                            <button
+                                                class="secondary"
+                                                onclick="verContenido({{ loop.index0 }})"
+                                            >
+                                                👁 Ver contenido
+                                            </button>
 
-            <label>Archivo PDF</label>
+                                        </td>
 
-            <div class="card"
-     id="uploadForm">
+                                    </tr>
 
-    <h2>Agregar documento</h2>
+                                    {% endfor %}
 
-    <p class="muted">
-        Incorporá un documento PDF a la Knowledge Base.
-    </p>
+                                {% else %}
 
-    <form action="/knowledge/upload"
-          method="POST"
-          enctype="multipart/form-data">
+                                    <tr>
 
-        <div class="grid">
+                                        <td
+                                            colspan="6"
+                                            style="
+                                                text-align:center;
+                                                padding:30px;
+                                                color:#6b7280;
+                                            "
+                                        >
+                                            Todavía no hay documentos
+                                            cargados.
+                                        </td>
 
-            <div>
+                                    </tr>
 
-                <label>Archivo PDF</label>
+                                {% endif %}
 
-                <input type="file"
-                       name="archivo"
-                       accept=".pdf"
-                       required>
+                            </tbody>
 
-            </div>
+                        </table>
 
-            <div>
+                    </div>
 
-                <label>Nombre del documento</label>
+                </div>
 
-                <input type="text"
-                       name="nombre_documento"
-                       placeholder="Ej. Procedimiento error de CAE">
 
-            </div>
 
-            <div>
+                <!-- ================================================= -->
+                <!-- AGREGAR DOCUMENTO -->
+                <!-- ================================================= -->
 
-                <label>Producto</label>
+                <div
+                    class="panel"
+                    id="agregar-documento"
+                >
 
-                <select name="producto">
+                    <div class="panel-header">
 
-                    <option selected>Dragonfish</option>
-                    <option>Pantera</option>
-                    <option>Lince</option>
+                        <div>
 
-                </select>
+                            <h2>
+                                Agregar documento
+                            </h2>
 
-            </div>
+                            <p>
+                                Incorporá documentación a la Knowledge
+                                Base.
+                            </p>
 
-            <div>
+                        </div>
 
-                <label>Categoría</label>
+                    </div>
 
-                <select name="categoria">
 
-                    <option selected>Seleccionar categoría</option>
-                    <option>Facturación Electrónica</option>
-                    <option>Mantenimiento</option>
-                    <option>Base de Datos</option>
-                    <option>Configuración</option>
-                    <option>Ecommerce</option>
-                    <option>Otros</option>
+                    <form
+                        action="/knowledge/upload"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
 
-                </select>
+                        <div class="grid">
 
-            </div>
 
-            <div>
+                            <div>
 
-                <label>Subcategoría</label>
+                                <label>
+                                    Archivo PDF
+                                </label>
 
-                <input type="text"
-                       name="subcategoria"
-                       placeholder="Ej. CAE / Certificados / ARCA">
+                                <input
+                                    type="file"
+                                    name="archivo"
+                                    accept=".pdf"
+                                    required
+                                >
 
-            </div>
+                            </div>
 
-            <div>
 
-                <label>Nivel de soporte</label>
+                            <div>
 
-                <select name="nivel">
+                                <label>
+                                    Nombre del documento
+                                </label>
 
-                    <option selected>L1</option>
-                    <option>L2</option>
-                    <option>L3</option>
-                    <option>Todos</option>
+                                <input
+                                    type="text"
+                                    name="nombre_documento"
+                                    placeholder="Ej. Procedimiento error de CAE"
+                                >
 
-                </select>
+                            </div>
 
-            </div>
 
-            <div>
+                            <div>
 
-                <label>Estado</label>
+                                <label>
+                                    Producto
+                                </label>
 
-                <select name="estado">
+                                <select name="producto">
 
-                    <option selected>Vigente</option>
-                    <option>Pendiente de revisión</option>
-                    <option>Archivado</option>
+                                    <option selected>
+                                        Dragonfish
+                                    </option>
 
-                </select>
+                                    <option>
+                                        Pantera
+                                    </option>
 
-            </div>
+                                    <option>
+                                        Lince
+                                    </option>
 
-            <div>
+                                </select>
 
-                <label>Fuente</label>
+                            </div>
 
-                <select name="fuente">
 
-                    <option selected>Procedimiento oficial</option>
-                    <option>Manual</option>
-                    <option>Documento interno</option>
-                    <option>Otro</option>
+                            <div>
 
-                </select>
+                                <label>
+                                    Categoría
+                                </label>
 
-            </div>
+                                <select name="categoria">
 
-        </div>
+                                    <option selected>
+                                        Seleccionar categoría
+                                    </option>
 
-        <div style="margin-top:20px;">
+                                    <option>
+                                        Facturación Electrónica
+                                    </option>
 
-            <label>
-                Descripción / alcance del documento
-            </label>
+                                    <option>
+                                        Mantenimiento
+                                    </option>
 
-            <textarea
-                name="descripcion"
-                placeholder="Describí brevemente qué problema o procedimiento cubre este documento."></textarea>
+                                    <option>
+                                        Base de Datos
+                                    </option>
 
-        </div>
+                                    <option>
+                                        Configuración
+                                    </option>
 
-        <div class="buttons">
+                                    <option>
+                                        Ecommerce
+                                    </option>
 
-            <button type="submit"
-                    class="primary">
-                Incorporar documento
-            </button>
+                                    <option>
+                                        Otros
+                                    </option>
 
-        </div>
+                                </select>
 
-    </form>
+                            </div>
 
-</div>
 
-        </div>
+                            <div>
 
+                                <label>
+                                    Subcategoría
+                                </label>
 
-        <div>
+                                <input
+                                    type="text"
+                                    name="subcategoria"
+                                    placeholder="Ej. CAE / Certificados / ARCA"
+                                >
 
-            <label>Nombre del documento</label>
+                            </div>
 
-            <input type="text"
-                   placeholder="Ej. Procedimiento error de CAE">
 
-        </div>
+                            <div>
 
+                                <label>
+                                    Nivel de soporte
+                                </label>
 
-        <div>
+                                <select name="nivel">
 
-            <label>Producto</label>
+                                    <option selected>
+                                        L1
+                                    </option>
 
-            <select>
+                                    <option>
+                                        L2
+                                    </option>
 
-                <option selected>Dragonfish</option>
-                <option>Pantera</option>
-                <option>Lince</option>
+                                    <option>
+                                        L3
+                                    </option>
 
-            </select>
+                                    <option>
+                                        Todos
+                                    </option>
 
-        </div>
+                                </select>
 
+                            </div>
 
-        <div>
 
-            <label>Categoría</label>
+                            <div>
 
-            <select>
+                                <label>
+                                    Estado
+                                </label>
 
-                <option selected>Seleccionar categoría</option>
-                <option>Facturación Electrónica</option>
-                <option>Mantenimiento</option>
-                <option>Base de Datos</option>
-                <option>Configuración</option>
-                <option>Ecommerce</option>
-                <option>Otros</option>
+                                <select name="estado">
 
-            </select>
+                                    <option selected>
+                                        Vigente
+                                    </option>
 
-        </div>
+                                    <option>
+                                        Pendiente de revisión
+                                    </option>
 
+                                    <option>
+                                        Archivado
+                                    </option>
 
-        <div>
+                                </select>
 
-            <label>Subcategoría</label>
+                            </div>
 
-            <input type="text"
-                   placeholder="Ej. CAE / Certificados / ARCA">
 
-        </div>
+                            <div>
 
+                                <label>
+                                    Fuente
+                                </label>
 
-        <div>
+                                <select name="fuente">
 
-            <label>Nivel de soporte</label>
+                                    <option selected>
+                                        Procedimiento oficial
+                                    </option>
 
-            <select>
+                                    <option>
+                                        Manual
+                                    </option>
 
-                <option selected>L1</option>
-                <option>L2</option>
-                <option>L3</option>
-                <option>Todos</option>
+                                    <option>
+                                        Documento interno
+                                    </option>
 
-            </select>
+                                    <option>
+                                        Otro
+                                    </option>
 
-        </div>
+                                </select>
 
+                            </div>
 
-        <div>
+                        </div>
 
-            <label>Estado</label>
 
-            <select>
 
-                <option selected>Vigente</option>
-                <option>Pendiente de revisión</option>
-                <option>Archivado</option>
+                        <div style="margin-top:20px;">
 
-            </select>
+                            <label>
+                                Descripción / alcance del documento
+                            </label>
 
-        </div>
+                            <textarea
+                                name="descripcion"
+                                placeholder="Describí brevemente qué problema o procedimiento cubre este documento."
+                            ></textarea>
 
+                        </div>
 
-        <div>
 
-            <label>Fuente</label>
 
-            <select>
+                        <div class="buttons">
 
-                <option selected>Procedimiento oficial</option>
-                <option>Manual</option>
-                <option>Documento interno</option>
-                <option>Otro</option>
+                            <button
+                                type="submit"
+                                class="primary"
+                            >
+                                Incorporar documento
+                            </button>
 
-            </select>
+                        </div>
 
-        </div>
+                    </form>
 
-    </div>
+                </div>
 
+            </section>
 
-    <div style="margin-top:20px;">
 
-        <label>
-            Descripción / alcance del documento
-        </label>
 
-        <textarea
-            placeholder="Describí brevemente qué problema o procedimiento cubre este documento."></textarea>
-
-    </div>
-
-
-    <div class="buttons">
-
-        <button class="secondary"
-                onclick="document.getElementById('uploadForm').style.display='none'">
-            Cancelar
-        </button>
-
-        <button class="primary"
-                onclick="alert('Documento preparado para incorporar a la Knowledge Base')">
-            Incorporar documento
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- DOCUMENTOS -->
-
-<div class="card">
-
-    <h2>Documentos</h2>
-
-    <p class="muted">
-        Documentación disponible en la Knowledge Base seleccionada.
-    </p>
-
-
-    <div style="overflow-x:auto;">
-
-        <table class="routing-table">
-
-            <thead>
-
-                <tr>
-
-                    <th>Documento</th>
-                    <th>Categoría</th>
-                    <th>Subcategoría</th>
-                    <th>Nivel</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                <tr>
-
-                    <tbody>
-    {% if documentos %}
-        {% for documento in documentos %}
-        <tr>
-            <td>
-                📄 {{ documento.nombre or documento.archivo }}
-            </td>
-
-            <td>
-                {{ documento.producto }}
-            </td>
-
-            <td>
-                {{ documento.categoria }}
-                {% if documento.subcategoria %}
-                    <br>
-                    <small>{{ documento.subcategoria }}</small>
-                {% endif %}
-            </td>
-
-            <td>
-                {{ documento.nivel }}
-            </td>
-
-            <td>
-                {% if documento.estado == "Vigente" %}
-                    <span class="tag green">Vigente</span>
-                {% elif documento.estado == "Pendiente de revisión" %}
-                    <span class="tag yellow">Pendiente</span>
-                {% else %}
-                    <span class="tag">Archivado</span>
-                {% endif %}
-            </td>
-
-            <td>
-                <button
-                    class="secondary"
-                    onclick='alert(
-                        "Documento: {{ documento.nombre or documento.archivo }}\n\n" +
-                        "Producto: {{ documento.producto }}\n" +
-                        "Categoría: {{ documento.categoria }}\n" +
-                        "Subcategoría: {{ documento.subcategoria }}\n" +
-                        "Nivel: {{ documento.nivel }}\n" +
-                        "Estado: {{ documento.estado }}\n" +
-                        "Fuente: {{ documento.fuente }}\n\n" +
-                        "Descripción: {{ documento.descripcion }}"
-                    )'>
-                    Ver
-                </button>
-            </td>
-        </tr>
-        {% endfor %}
-
-    {% else %}
-
-        <tr>
-            <td colspan="6"
-                style="text-align:center; padding:30px; color:#6b7280;">
-                Todavía no hay documentos cargados.
-            </td>
-        </tr>
-
-    {% endif %}
-</tbody>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
-
-            <!-- ============================= -->
+            <!-- ================================================= -->
             <!-- CONEXIONES -->
-            <!-- ============================= -->
+            <!-- ================================================= -->
 
             {% elif section == "conexiones" %}
 
-            <div class="card">
+            <section class="content-section">
 
-                <h2>Conexiones</h2>
+                <div class="section-heading">
 
-                <p class="muted">
-                    Integraciones con WhatsApp, APIs, tickets y otros sistemas.
-                </p>
+                    <div>
 
-            </div>
+                        <h1>
+                            Conexiones
+                        </h1>
+
+                        <p>
+                            Sistemas y servicios disponibles para los
+                            agentes.
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-            <!-- ============================= -->
+                <div class="cards-grid">
+
+                    <div class="panel">
+
+                        <h2>
+                            WhatsApp
+                        </h2>
+
+                        <p>
+                            Canal de atención del agente técnico.
+                        </p>
+
+                        <span class="tag green">
+                            Conectado
+                        </span>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <h2>
+                            OpenAI
+                        </h2>
+
+                        <p>
+                            Modelo de inteligencia artificial.
+                        </p>
+
+                        <span class="tag green">
+                            Configurado
+                        </span>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <h2>
+                            Dragonfish
+                        </h2>
+
+                        <p>
+                            Integración con información del producto.
+                        </p>
+
+                        <span class="tag">
+                            Próximamente
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ================================================= -->
             <!-- MÉTRICAS -->
-            <!-- ============================= -->
+            <!-- ================================================= -->
 
             {% elif section == "metricas" %}
 
-            <div class="card">
+            <section class="content-section">
 
-                <h2>Métricas</h2>
+                <div class="section-heading">
 
-                <p class="muted">
-                    Métricas de conversaciones, resolución, derivaciones
-                    y rendimiento de los agentes.
-                </p>
+                    <div>
 
-            </div>
+                        <h1>
+                            Métricas
+                        </h1>
+
+                        <p>
+                            Seguimiento del funcionamiento de los agentes.
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-            <!-- ============================= -->
+                <div class="cards-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Consultas
+                        </div>
+
+                        <div class="stat-value">
+                            1.284
+                        </div>
+
+                        <div class="stat-description">
+                            Consultas procesadas
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Resolución L1
+                        </div>
+
+                        <div class="stat-value">
+                            78%
+                        </div>
+
+                        <div class="stat-description">
+                            Casos resueltos
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Derivaciones
+                        </div>
+
+                        <div class="stat-value">
+                            22%
+                        </div>
+
+                        <div class="stat-description">
+                            Casos derivados
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Knowledge Base
+                        </div>
+
+                        <div class="stat-value">
+                            {{ documentos|length if documentos is defined else 0 }}
+                        </div>
+
+                        <div class="stat-description">
+                            Documentos
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ================================================= -->
             <!-- PLAYGROUND -->
-            <!-- ============================= -->
+            <!-- ================================================= -->
 
             {% elif section == "playground" %}
 
-            <div class="card">
+            <section class="content-section">
 
-                <h2>Playground</h2>
+                <div class="section-heading">
 
-                <p class="muted">
-                    Aquí podremos probar las conversaciones con el agente
-                    antes de conectarlo a WhatsApp.
-                </p>
+                    <div>
 
-            </div>
+                        <h1>
+                            Playground
+                        </h1>
+
+                        <p>
+                            Probá el comportamiento del agente antes de
+                            conectarlo al canal real.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h2>
+                                Agente Técnico L1 — Dragonfish
+                            </h2>
+
+                            <p>
+                                Simulación de una conversación.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        style="
+                            background:#f8fafc;
+                            border:1px solid #e5e7eb;
+                            border-radius:12px;
+                            padding:20px;
+                            min-height:300px;
+                        "
+                    >
+
+                        <div
+                            style="
+                                text-align:center;
+                                color:#6b7280;
+                                padding:80px 20px;
+                            "
+                        >
+                            Playground del agente próximamente.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
 
             {% endif %}
 
+
+        </main>
+
+    </div>
+
+
+
+    <!-- ========================================================= -->
+    <!-- MODAL: VER CONTENIDO DEL DOCUMENTO -->
+    <!-- ========================================================= -->
+
+    <div
+        id="modalDocumento"
+        style="
+            display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.45);
+            align-items:center;
+            justify-content:center;
+            z-index:9999;
+        "
+    >
+
+        <div
+            style="
+                width:90%;
+                max-width:1100px;
+                max-height:85vh;
+                background:white;
+                border-radius:14px;
+                box-shadow:0 20px 60px rgba(0,0,0,0.25);
+                display:flex;
+                flex-direction:column;
+                overflow:hidden;
+            "
+        >
+
+
+            <!-- Encabezado del modal -->
+
+            <div
+                style="
+                    padding:20px 24px;
+                    border-bottom:1px solid #e5e7eb;
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                "
+            >
+
+                <div>
+
+                    <div
+                        id="tituloDocumento"
+                        style="
+                            font-size:20px;
+                            font-weight:700;
+                            color:#111827;
+                        "
+                    >
+                        Documento
+                    </div>
+
+
+                    <div
+                        id="infoDocumento"
+                        style="
+                            margin-top:5px;
+                            font-size:13px;
+                            color:#6b7280;
+                        "
+                    >
+                    </div>
+
+                </div>
+
+
+                <button
+                    onclick="cerrarContenido()"
+                    style="
+                        border:none;
+                        background:transparent;
+                        font-size:24px;
+                        cursor:pointer;
+                        color:#6b7280;
+                    "
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <!-- Contenido del documento -->
+
+            <div
+                style="
+                    padding:24px;
+                    overflow:auto;
+                    flex:1;
+                    background:#f9fafb;
+                "
+            >
+
+                <div
+                    id="contenidoDocumento"
+                    style="
+                        background:white;
+                        border:1px solid #e5e7eb;
+                        border-radius:10px;
+                        padding:20px;
+                        white-space:pre-wrap;
+                        font-family:Verdana, sans-serif;
+                        font-size:13px;
+                        line-height:1.7;
+                        color:#374151;
+                    "
+                >
+                </div>
+
+            </div>
+
+
+
+            <!-- Footer del modal -->
+
+            <div
+                style="
+                    padding:14px 24px;
+                    border-top:1px solid #e5e7eb;
+                    display:flex;
+                    justify-content:flex-end;
+                "
+            >
+
+                <button
+                    class="secondary"
+                    onclick="cerrarContenido()"
+                >
+                    Cerrar
+                </button>
+
+            </div>
+
         </div>
 
-    </main>
+    </div>
 
-</div>
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT KNOWLEDGE BASE -->
+    <!-- ========================================================= -->
+
+    <script>
+
+        function verContenido(indice) {
+
+            const documentos = [
+
+                {% for documento in documentos|default([]) %}
+
+                {
+                    nombre:
+                        {{ (documento.nombre or documento.archivo)|tojson }},
+
+                    archivo:
+                        {{ documento.archivo|tojson }},
+
+                    producto:
+                        {{ documento.producto|tojson }},
+
+                    categoria:
+                        {{ documento.categoria|tojson }},
+
+                    subcategoria:
+                        {{ documento.subcategoria|tojson }},
+
+                    nivel:
+                        {{ documento.nivel|tojson }},
+
+                    estado:
+                        {{ documento.estado|tojson }},
+
+                    fuente:
+                        {{ documento.fuente|tojson }},
+
+                    descripcion:
+                        {{ documento.descripcion|tojson }},
+
+                    texto:
+                        {{ documento.texto_extraido|tojson }}
+                }
+
+                {% if not loop.last %},{% endif %}
+
+                {% endfor %}
+
+            ];
+
+
+            const documento = documentos[indice];
+
+
+            if (!documento) {
+
+                alert(
+                    "No se encontró el documento."
+                );
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "contenidoDocumento"
+            ).innerText =
+                documento.texto ||
+                "No se pudo extraer texto de este PDF.";
+
+
+            document.getElementById(
+                "tituloDocumento"
+            ).innerText =
+                documento.nombre ||
+                documento.archivo;
+
+
+            document.getElementById(
+                "infoDocumento"
+            ).innerText =
+                documento.producto +
+                " · " +
+                documento.categoria +
+                " · Nivel " +
+                documento.nivel;
+
+
+            document.getElementById(
+                "modalDocumento"
+            ).style.display = "flex";
+
+        }
+
+
+
+        function cerrarContenido() {
+
+            document.getElementById(
+                "modalDocumento"
+            ).style.display = "none";
+
+        }
+
+
+    </script>
+
 
 </body>
-</html>
