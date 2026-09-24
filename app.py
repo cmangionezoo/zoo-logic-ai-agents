@@ -4,13 +4,18 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def index():
-    return render_template("index.html")
+def home():
+    return render_template("index.html", section=None)
 
 
 @app.route("/agentes")
 def agentes():
     return render_template("index.html", section="agentes")
+
+
+@app.route("/agentes/configurar")
+def agentes_configurar():
+    return render_template("index.html", section="agente_config")
 
 
 @app.route("/knowledge")
@@ -34,4 +39,4 @@ def playground():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
