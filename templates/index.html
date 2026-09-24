@@ -1241,8 +1241,154 @@
 
             <label>Archivo PDF</label>
 
-            <input type="file"
-                   accept=".pdf">
+            <div class="card"
+     id="uploadForm">
+
+    <h2>Agregar documento</h2>
+
+    <p class="muted">
+        Incorporá un documento PDF a la Knowledge Base.
+    </p>
+
+    <form action="/knowledge/upload"
+          method="POST"
+          enctype="multipart/form-data">
+
+        <div class="grid">
+
+            <div>
+
+                <label>Archivo PDF</label>
+
+                <input type="file"
+                       name="archivo"
+                       accept=".pdf"
+                       required>
+
+            </div>
+
+            <div>
+
+                <label>Nombre del documento</label>
+
+                <input type="text"
+                       name="nombre_documento"
+                       placeholder="Ej. Procedimiento error de CAE">
+
+            </div>
+
+            <div>
+
+                <label>Producto</label>
+
+                <select name="producto">
+
+                    <option selected>Dragonfish</option>
+                    <option>Pantera</option>
+                    <option>Lince</option>
+
+                </select>
+
+            </div>
+
+            <div>
+
+                <label>Categoría</label>
+
+                <select name="categoria">
+
+                    <option selected>Seleccionar categoría</option>
+                    <option>Facturación Electrónica</option>
+                    <option>Mantenimiento</option>
+                    <option>Base de Datos</option>
+                    <option>Configuración</option>
+                    <option>Ecommerce</option>
+                    <option>Otros</option>
+
+                </select>
+
+            </div>
+
+            <div>
+
+                <label>Subcategoría</label>
+
+                <input type="text"
+                       name="subcategoria"
+                       placeholder="Ej. CAE / Certificados / ARCA">
+
+            </div>
+
+            <div>
+
+                <label>Nivel de soporte</label>
+
+                <select name="nivel">
+
+                    <option selected>L1</option>
+                    <option>L2</option>
+                    <option>L3</option>
+                    <option>Todos</option>
+
+                </select>
+
+            </div>
+
+            <div>
+
+                <label>Estado</label>
+
+                <select name="estado">
+
+                    <option selected>Vigente</option>
+                    <option>Pendiente de revisión</option>
+                    <option>Archivado</option>
+
+                </select>
+
+            </div>
+
+            <div>
+
+                <label>Fuente</label>
+
+                <select name="fuente">
+
+                    <option selected>Procedimiento oficial</option>
+                    <option>Manual</option>
+                    <option>Documento interno</option>
+                    <option>Otro</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div style="margin-top:20px;">
+
+            <label>
+                Descripción / alcance del documento
+            </label>
+
+            <textarea
+                name="descripcion"
+                placeholder="Describí brevemente qué problema o procedimiento cubre este documento."></textarea>
+
+        </div>
+
+        <div class="buttons">
+
+            <button type="submit"
+                    class="primary">
+                Incorporar documento
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
 
         </div>
 
@@ -1414,12 +1560,63 @@
 
                 <tr>
 
-                    <td colspan="6"
-                        style="text-align:center; padding:30px; color:#6b7280;">
+                    <tbody>
 
-                        Todavía no hay documentos cargados.
+    {% if archivos %}
 
-                    </td>
+        {% for archivo in archivos %}
+
+        <tr>
+
+            <td>
+                📄 {{ archivo }}
+            </td>
+
+            <td>
+                -
+            </td>
+
+            <td>
+                -
+            </td>
+
+            <td>
+                L1
+            </td>
+
+            <td>
+                <span class="tag green">
+                    Cargado
+                </span>
+            </td>
+
+            <td>
+                <button class="secondary"
+                        onclick="alert('Este documento será procesado en el siguiente paso.')">
+                    Ver
+                </button>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    {% else %}
+
+        <tr>
+
+            <td colspan="6"
+                style="text-align:center; padding:30px; color:#6b7280;">
+
+                Todavía no hay documentos cargados.
+
+            </td>
+
+        </tr>
+
+    {% endif %}
+
+</tbody>
 
                 </tr>
 
