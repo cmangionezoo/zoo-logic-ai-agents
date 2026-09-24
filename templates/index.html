@@ -1561,61 +1561,68 @@
                 <tr>
 
                     <tbody>
-
-    {% if archivos %}
-
-        {% for archivo in archivos %}
-
+    {% if documentos %}
+        {% for documento in documentos %}
         <tr>
-
             <td>
-                📄 {{ archivo }}
+                📄 {{ documento.nombre or documento.archivo }}
             </td>
 
             <td>
-                -
+                {{ documento.producto }}
             </td>
 
             <td>
-                -
+                {{ documento.categoria }}
+                {% if documento.subcategoria %}
+                    <br>
+                    <small>{{ documento.subcategoria }}</small>
+                {% endif %}
             </td>
 
             <td>
-                L1
+                {{ documento.nivel }}
             </td>
 
             <td>
-                <span class="tag green">
-                    Cargado
-                </span>
+                {% if documento.estado == "Vigente" %}
+                    <span class="tag green">Vigente</span>
+                {% elif documento.estado == "Pendiente de revisión" %}
+                    <span class="tag yellow">Pendiente</span>
+                {% else %}
+                    <span class="tag">Archivado</span>
+                {% endif %}
             </td>
 
             <td>
-                <button class="secondary"
-                        onclick="alert('Este documento será procesado en el siguiente paso.')">
+                <button
+                    class="secondary"
+                    onclick='alert(
+                        "Documento: {{ documento.nombre or documento.archivo }}\n\n" +
+                        "Producto: {{ documento.producto }}\n" +
+                        "Categoría: {{ documento.categoria }}\n" +
+                        "Subcategoría: {{ documento.subcategoria }}\n" +
+                        "Nivel: {{ documento.nivel }}\n" +
+                        "Estado: {{ documento.estado }}\n" +
+                        "Fuente: {{ documento.fuente }}\n\n" +
+                        "Descripción: {{ documento.descripcion }}"
+                    )'>
                     Ver
                 </button>
             </td>
-
         </tr>
-
         {% endfor %}
 
     {% else %}
 
         <tr>
-
             <td colspan="6"
                 style="text-align:center; padding:30px; color:#6b7280;">
-
                 Todavía no hay documentos cargados.
-
             </td>
-
         </tr>
 
     {% endif %}
-
 </tbody>
 
                 </tr>
