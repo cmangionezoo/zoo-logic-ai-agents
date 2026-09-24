@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import os
+import json
 
 app = Flask(__name__)
 app.secret_key = "zoo-logic-ai-agents"
 
 # Carpeta donde se guardarán los PDFs
 UPLOAD_FOLDER = "knowledge/dragonfish"
+METADATA_FILE = "knowledge/dragonfish/metadata.json"
+
 ALLOWED_EXTENSIONS = {"pdf"}
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -20,6 +23,22 @@ def allowed_file(filename):
         "." in filename
         and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
     )
+
+
+def cargar_metadata():
+    if not os.path.exists(METADATA_FILE):
+        return []
+
+    try:
+        with open(METADATA_FILE, "r", encoding="utf-8") as archivo:
+            return json.load(archivo)
+    except Exception:
+        return []
+
+
+def guardar_metadata(metadata):
+    with open(METADATA_FILE, "w", encoding="utf-8") as archivo:
+        json.dump(metadata, archivo, ensure_ascii=False, indent=4)
 
 
 @app.route("/")
@@ -39,23 +58,13 @@ def agentes_configurar():
 
 @app.route("/knowledge")
 def knowledge():
-    archivos = []
 
-    carpeta = app.config["UPLOAD_FOLDER"]
-
-    if os.path.exists(carpeta):
-        for nombre in os.listdir(carpeta):
-            ruta = os.path.join(carpeta, nombre)
-
-            if os.path.isfile(ruta) and allowed_file(nombre):
-                archivos.append(nombre)
-
-    archivos.sort()
+    documentos = cargar_metadata()
 
     return render_template(
         "index.html",
         section="knowledge",
-        archivos=archivos
+        documentos=documentos
     )
 
 
@@ -76,14 +85,41 @@ def knowledge_upload():
         flash("Solo se permiten archivos PDF.")
         return redirect(url_for("knowledge"))
 
-    nombre = secure_filename(archivo.filename)
+    # Nombre seguro del archivo
+    nombre_archivo = secure_filename(archivo.filename)
 
     carpeta = app.config["UPLOAD_FOLDER"]
-    ruta = os.path.join(carpeta, nombre)
+    ruta = os.path.join(carpeta, nombre_archivo)
 
+    # Guardar PDF
     archivo.save(ruta)
 
-    flash(f"Documento '{nombre}' cargado correctamente.")
+    # Obtener metadata del formulario
+    documento = {
+        "archivo": nombre_archivo,
+        "nombre": request.form.get("nombre_documento", "").strip(),
+        "producto": request.form.get("producto", "").strip(),
+        "categoria": request.form.get("categoria", "").strip(),
+        "subcategoria": request.form.get("subcategoria", "").strip(),
+        "nivel": request.form.get("nivel", "").strip(),
+        "estado": request.form.get("estado", "").strip(),
+        "fuente": request.form.get("fuente", "").strip(),
+        "descripcion": request.form.get("descripcion", "").strip()
+    }
+
+    # Si ya existía un documento con ese nombre, lo reemplazamos
+    documentos = cargar_metadata()
+
+    documentos = [
+        d for d in documentos
+        if d.get("archivo") != nombre_archivo
+    ]
+
+    documentos.append(documento)
+
+    guardar_metadata(documentos)
+
+    flash(f"Documento '{nombre_archivo}' cargado correctamente.")
 
     return redirect(url_for("knowledge"))
 
