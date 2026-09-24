@@ -1019,16 +1019,417 @@
 
             {% elif section == "knowledge" %}
 
-            <div class="card">
+<!-- ============================= -->
+<!-- KNOWLEDGE BASE -->
+<!-- ============================= -->
 
-                <h2>Knowledge Base</h2>
+<div class="card">
 
-                <p class="muted">
-                    Aquí se administrará la documentación que utilizarán
-                    los agentes para responder.
-                </p>
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:20px;">
 
+        <div>
+            <h2>Knowledge Base</h2>
+
+            <p class="muted">
+                Documentación que utilizan los agentes para diagnosticar
+                problemas y proponer soluciones.
+            </p>
+        </div>
+
+        <button class="primary"
+                onclick="document.getElementById('uploadForm').style.display='block'">
+            + Agregar documento
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- SELECTOR DE KB -->
+
+<div class="card">
+
+    <h3>Knowledge Base seleccionada</h3>
+
+    <div class="grid">
+
+        <div>
+
+            <label>Producto</label>
+
+            <select>
+
+                <option selected>Dragonfish</option>
+                <option>Pantera</option>
+                <option>Lince</option>
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label>Estado</label>
+
+            <select>
+
+                <option selected>Todos</option>
+                <option>Vigentes</option>
+                <option>Pendientes de revisión</option>
+                <option>Archivados</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- RESUMEN -->
+
+<div class="grid-4">
+
+    <div class="stat">
+
+        <div class="stat-number">0</div>
+
+        <div class="stat-label">
+            Documentos
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-number">0</div>
+
+        <div class="stat-label">
+            Vigentes
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-number">0</div>
+
+        <div class="stat-label">
+            Pendientes de revisión
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-number">0</div>
+
+        <div class="stat-label">
+            Archivados
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CATEGORÍAS -->
+
+<div class="card">
+
+    <h2>Categorías</h2>
+
+    <p class="muted">
+        Organización de la documentación de Dragonfish.
+    </p>
+
+
+    <div class="grid-3">
+
+        <div class="stat">
+
+            <div class="stat-number">0</div>
+
+            <div class="stat-label">
+                Facturación Electrónica
             </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-number">0</div>
+
+            <div class="stat-label">
+                Mantenimiento
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-number">0</div>
+
+            <div class="stat-label">
+                Base de Datos
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-number">0</div>
+
+            <div class="stat-label">
+                Configuración
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-number">0</div>
+
+            <div class="stat-label">
+                Ecommerce
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-number">0</div>
+
+            <div class="stat-label">
+                Otros
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FORMULARIO DE CARGA -->
+
+<div class="card"
+     id="uploadForm"
+     style="display:none;">
+
+    <h2>Agregar documento</h2>
+
+    <p class="muted">
+        Incorporá un documento a la Knowledge Base y definí cómo debe
+        utilizarlo el agente.
+    </p>
+
+
+    <div class="grid">
+
+        <div>
+
+            <label>Archivo PDF</label>
+
+            <input type="file"
+                   accept=".pdf">
+
+        </div>
+
+
+        <div>
+
+            <label>Nombre del documento</label>
+
+            <input type="text"
+                   placeholder="Ej. Procedimiento error de CAE">
+
+        </div>
+
+
+        <div>
+
+            <label>Producto</label>
+
+            <select>
+
+                <option selected>Dragonfish</option>
+                <option>Pantera</option>
+                <option>Lince</option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>Categoría</label>
+
+            <select>
+
+                <option selected>Seleccionar categoría</option>
+                <option>Facturación Electrónica</option>
+                <option>Mantenimiento</option>
+                <option>Base de Datos</option>
+                <option>Configuración</option>
+                <option>Ecommerce</option>
+                <option>Otros</option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>Subcategoría</label>
+
+            <input type="text"
+                   placeholder="Ej. CAE / Certificados / ARCA">
+
+        </div>
+
+
+        <div>
+
+            <label>Nivel de soporte</label>
+
+            <select>
+
+                <option selected>L1</option>
+                <option>L2</option>
+                <option>L3</option>
+                <option>Todos</option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>Estado</label>
+
+            <select>
+
+                <option selected>Vigente</option>
+                <option>Pendiente de revisión</option>
+                <option>Archivado</option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>Fuente</label>
+
+            <select>
+
+                <option selected>Procedimiento oficial</option>
+                <option>Manual</option>
+                <option>Documento interno</option>
+                <option>Otro</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div style="margin-top:20px;">
+
+        <label>
+            Descripción / alcance del documento
+        </label>
+
+        <textarea
+            placeholder="Describí brevemente qué problema o procedimiento cubre este documento."></textarea>
+
+    </div>
+
+
+    <div class="buttons">
+
+        <button class="secondary"
+                onclick="document.getElementById('uploadForm').style.display='none'">
+            Cancelar
+        </button>
+
+        <button class="primary"
+                onclick="alert('Documento preparado para incorporar a la Knowledge Base')">
+            Incorporar documento
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- DOCUMENTOS -->
+
+<div class="card">
+
+    <h2>Documentos</h2>
+
+    <p class="muted">
+        Documentación disponible en la Knowledge Base seleccionada.
+    </p>
+
+
+    <div style="overflow-x:auto;">
+
+        <table class="routing-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Documento</th>
+                    <th>Categoría</th>
+                    <th>Subcategoría</th>
+                    <th>Nivel</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td colspan="6"
+                        style="text-align:center; padding:30px; color:#6b7280;">
+
+                        Todavía no hay documentos cargados.
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
 
 
             <!-- ============================= -->
