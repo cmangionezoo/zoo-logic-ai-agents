@@ -512,7 +512,7 @@ def extraer_imagenes_pdf(
                                 f"imagen: {str(e)}"
                             )
 
-                    )
+                    })
 
         documento.close()
 
